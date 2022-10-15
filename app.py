@@ -1,5 +1,5 @@
 import re
-import sqlite3
+from gsheetsdb import connect
 from matplotlib import pyplot as plt
 import numpy as np
 import streamlit as st
@@ -9,18 +9,28 @@ import os
 title = os.environ["APP_TITLE"]
 subheader = os.environ["APP_SUBHEADER"]
 message_path = os.environ["MESSAGE_PATH"]
-big_password = os.environ["PASSWORD"]
+passwords = os.environ["PASSWORDS"].split(" ")
 
 password = st.text_input("Password")
-if password not in big_password:
+if password not in passwords:
     st.stop()
 
 st.title(title)
 st.subheader(subheader)
+conn = connect()
+
+@st.cache(ttl=600)
+def run_query(query):
+    rows = conn.execute(query, headers=1)
+    rows = rows.fetchall()
+    return rows
 
 @st.cache
 def get_data() -> pd.DataFrame:
-    df = pd.read_csv(message_path)
+
+    sheet_url = os.environ["SHEET_ID"]
+    rows = run_query(f'SELECT * FROM "{sheet_url}"')
+    df = pd.DataFrame(rows, columns=rows[0]._fields)
     # Message, Name, Datetime columns
     df["Datetime"] = pd.to_datetime(df["Datetime"])
     df.sort_values("Datetime", ascending=True, inplace=True)
