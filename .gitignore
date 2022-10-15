@@ -1,2 +1,4 @@
 out
 venv
+config.env
+data.csv
