@@ -8,7 +8,6 @@ import os
 
 title = os.environ["APP_TITLE"]
 subheader = os.environ["APP_SUBHEADER"]
-message_path = os.environ["MESSAGE_PATH"]
 passwords = os.environ["PASSWORDS"].split(" ")
 
 password = st.text_input("Password")
