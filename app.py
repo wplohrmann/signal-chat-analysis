@@ -9,6 +9,11 @@ import os
 title = os.environ["APP_TITLE"]
 subheader = os.environ["APP_SUBHEADER"]
 message_path = os.environ["MESSAGE_PATH"]
+big_password = os.environ["PASSWORD"]
+
+password = st.text_input("Password")
+if password not in big_password:
+    st.stop()
 
 st.title(title)
 st.subheader(subheader)
